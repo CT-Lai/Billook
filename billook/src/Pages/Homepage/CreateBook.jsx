@@ -34,7 +34,7 @@ function CreateBook() {
                             <input className="px-2 py-1 bg-gray rounded-md" type="text" value={photoName} placeholder="No file chosen" readOnly />
                             <label className="ml-2 bg-transparent rounded cursor-pointer">
                                 <FiUpload className="w-4 h-4" />
-                                <input type="file" className="hidden" onClick={handlePhotoChange} />
+                                <input type="file" className="hidden" onChange={handlePhotoChange} />
                             </label>
                         </div>
                     </div>
