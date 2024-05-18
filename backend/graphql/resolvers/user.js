@@ -51,7 +51,7 @@ const mutation = {
         } catch (err) {
             throw err;
         }
-    }
+    }, 
 }
 
 const userResolvers = {
