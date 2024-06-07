@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext }from "react";
 import CreateBook from "./CreateBook";
 import Bill from "../../Assets/homepg_img.jpg";
 import LQM from "../../Assets/left_quotation_mark.jpg";
 import RQM from "../../Assets/right_quotation_mark.jpg";
+import AuthContext from "../../Store/AuthContext";
 function Homepage() {
+    const auth = useContext(AuthContext)
     return (
         <>
             <div className="flex justify-between items-center mx-[8%] my-[8%]">
@@ -17,7 +19,7 @@ function Homepage() {
                     <img src={RQM} alt="RQM" className="ml-auto w-8 h-8" />
                 </div>
             </div>
-            <CreateBook />
+            { auth.isLoggedIn && <CreateBook /> }
         </>
 
     )
