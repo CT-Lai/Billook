@@ -1,6 +1,13 @@
 import logo from "../Assets/logo.png"
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../Store/AuthContext";
 function Navbar() {
+    const auth = useContext(AuthContext);
+    let Login_Logout_Button = <Link to="/login"> LOGIN </Link>
+    if (auth.isLoggedIn) {
+        Login_Logout_Button = <Link to="/" onClick={auth.logout}> LOGOUT </Link>
+    }
     return (
         <div className="flex justify-between items-center h-18 px-4  text-gray-dark border-b-2 border-gray-dark">
             <img className="my-1 w-14 h-12" src={logo} alt=""></img>
@@ -16,7 +23,7 @@ function Navbar() {
                     <Link to="/joinbook">JOIN BOOK</Link>
                 </li>
                 <li className="mx-4">
-                    <Link to="/login">LOGIN</Link>
+                    {Login_Logout_Button}
                 </li>
             </ul>
         </div>

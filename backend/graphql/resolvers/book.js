@@ -21,11 +21,14 @@ const query = {
         } catch (err) {
             throw err;
         }
-    }
+    } 
 }
 
 const mutation = {
-    createBook: async args => {
+    createBook: async (args, req) => {
+        if (!req.isAuth){
+            throw new Error("Unauthenticated!")
+        }
         const book = new model.Book({
             name: args.bookInput.name,
             board: args.bookInput.board? args.bookInput.board : 'no board yet',
@@ -51,7 +54,10 @@ const mutation = {
         }
     }, 
 
-    deleteBook: async args => {
+    deleteBook: async (args, req) => {
+		    if(!req.isAuth) {
+		        throw new Error('Unauthenticated');
+		    }
         try{
             const book = await model.Book.findById(args.bookID);
             if (!book) {
@@ -65,7 +71,10 @@ const mutation = {
 
     }, 
 
-    addMember: async args => {
+    addMember: async (args, req) => {
+		    if(!req.isAuth) {
+		        throw new Error('Unauthenticated');
+		    }
         try{
             const book = await model.Book.findById(args.bookID);
             if (!book) {
@@ -81,7 +90,10 @@ const mutation = {
             throw err;
         }
     }, 
-    removeMember: async args => {
+    removeMember: async (args, req) => {
+		    if(!req.isAuth) {
+		        throw new Error('Unauthenticated');
+		    }
         try{
             const book = await model.Book.findById(args.bookID);
             if (!book) {

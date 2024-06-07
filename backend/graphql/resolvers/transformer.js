@@ -5,6 +5,7 @@ const transformUser = user => {
     return {
         ...user._doc,
         _id: user.id,
+        createdBooks: getListTransformedBooks.bind(this, user._doc.createdBooks), 
     };
 }
 
@@ -55,7 +56,7 @@ const getListTransformedUser = async userIDs => {
 
 const getListTransformedBooks = async bookIDs => {
     try {
-        const books = await Book.find({ _id: { $in: bookIDs } });
+        const books = await models.Book.find({ _id: { $in: bookIDs } });
         return books.map(book => {
             return transformBook(book);
         });

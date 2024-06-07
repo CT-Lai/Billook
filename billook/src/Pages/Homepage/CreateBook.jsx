@@ -1,24 +1,66 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { FiUpload } from "react-icons/fi";
+import AuthContext from "../../Store/AuthContext";
+
 function CreateBook() {
     const [photoName, setPhotoName] = useState("No file chosen");
     const [file, setFile] = useState(null);   
     const bookNameRef = useRef(null);
     const bulletinBoardRef = useRef(null);
-
+    const auth = useContext(AuthContext);
     function handlePhotoChange(e) {
         setFile(e.target.files[0]);
         setPhotoName(e.target.files[0].name);
     }
-    function handleSubmit(e) {
-        e.preventDefault();
-        const newBook = {
-            BookName: bookNameRef.current.value,
-            PhotoName: photoName,
-            BulletinBoard: bulletinBoardRef.current.value,
-            File: file
-        };
-        console.log(newBook);
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // avoid execute default action
+
+        const bookName = bookNameRef.current.value;
+        let bulletinBoard = bulletinBoardRef.current.value;
+
+        if(!auth.isLoggedIn || !auth.userId) {
+            return;
+        }
+
+        if(!bookName || bookName.trim().length === 0) {
+            return;
+        }
+
+        if(!bulletinBoard || bulletinBoard.trim().length === 0) {
+            bulletinBoard = "No announcement";
+        }
+        try {
+            const request = await fetch('http://localhost:8000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + auth.token
+                },
+                body: JSON.stringify({
+                    query: `
+                    mutation {
+                        createBook(bookInput: {name: "${bookName}", board:"${bulletinBoard}", creator: "${auth.userId}"}) {
+                            _id
+                            name
+                            creator
+                            {
+                                _id
+                                username
+                            }
+                            board
+                        }
+                    }
+                    `
+                })
+            });
+            if(request.status !== 200 && request.status !== 201) {
+                throw new Error('Failed to fetch data');
+            }
+            const responseData = await request.json();
+            console.log(responseData);
+        } catch(err) {
+            console.error(err);
+        }
     }
     return (
             <form className='mx-[12%] mt-[8%] mb-[16%] bg-gray-light rounded-2xl px-[6%] py-[4%]' onSubmit={handleSubmit}>

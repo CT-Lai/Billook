@@ -4,7 +4,7 @@ export const userTypes = `
         username: String!
         password: String
         email: String!
-        createBooks: [Book!]!
+        createdBooks: [Book!]!
     }
 
     input UserInput {
@@ -12,9 +12,17 @@ export const userTypes = `
         password: String!
         email: String!
     }
+
+    type AuthData {
+        userId: ID!
+        token: String!
+        tokenExpiration: Int!
+    }
+
     type RootQuery {
-       users: [User!]!
-       user(userID: ID!): User!
+        users: [User!]!
+        user(userID: ID!): User!
+        login(email: String!, password: String!): AuthData!
     }
     type RootMutation {
         createUser(userInput: UserInput!): User
